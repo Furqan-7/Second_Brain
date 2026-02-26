@@ -36,7 +36,7 @@ function Layout() {
   const Share = useRecoilValue(ShareAtom);
 
   return (
-    <div className="bg-white flex h-screen ">
+    <div className="bg-white flex min-h-screen ">
       {/* Side Bar  */}
       <div>
         <SideBar />
@@ -54,7 +54,10 @@ function Layout() {
         </div>
 
         <div className="flex ml-8 lg:ml-16 mt-10  flex-wrap gap-8 lg:gap-13 mb-20 ">
-          {/* <Card /> */}
+          <Card />
+          <Card />
+          <Card />
+          <Card />
           <Card />
           <Card />
           <Card />

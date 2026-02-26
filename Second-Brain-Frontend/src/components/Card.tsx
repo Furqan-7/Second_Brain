@@ -14,7 +14,13 @@ interface CardProps {
 }
 
 export const Card = () => {
+
+  
+
+
   const date :Date = new Date();
+
+
   return (
     <div className=" shadow-2xl w-60 h-auto border border-gray-200 rounded-lg ">
       {/* First Section  */}
