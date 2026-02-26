@@ -29,6 +29,12 @@ interface InputBox {
   Text: string;
   PlaceHolder: string;
   Height: string;
+  setTitle?:(value : string) => void;
+  setContent?:(value:string) => void;
+}
+
+interface TagsProps{
+   setAllTags:(value : string[]) =>void;
 }
 
 interface Icons {
@@ -40,22 +46,32 @@ interface Icons {
 
 // This is Main Layout of the Add Content Component
 export function AddContent() {
+
+  const [title,setTitle] = useState("");
+  const [content,setContent] = useState("");
+  const [tags,setAllTags] = useState<string[]>([]);
+
+
   return (
     <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center">
       <div className="bg-white shadow-xl/30 w-[435px] h-auto rounded-lg ">
         <XmarkButton />
         <ContentTitle
+         setTitle={setTitle}
           Text={"Title"}
           PlaceHolder={"Enter a title..."}
           Height={"h-9"}
         />
         <ContentSource />
         <ContentTitle
+          setContent={setContent}
           Text={"Content"}
           PlaceHolder={"Paste your content or link here..."}
           Height={"h-10"}
         />
-        <Tags />
+        <Tags
+        setAllTags={setAllTags}
+        />
         <AddContentButton />
       </div>
     </div>
@@ -78,11 +94,16 @@ function XmarkButton() {
   );
 }
 
-function ContentTitle({ Text, PlaceHolder, Height }: InputBox) {
+function ContentTitle({ Text, PlaceHolder, Height,setTitle,setContent }: InputBox) {
+  
+
   return (
     <div className="pl-6 pr-6 pt-4">
       <p className="font-semibold text-[14px] tracking-wide">{Text}</p>
-      <input
+      <input onChange={(e)=>{
+           setTitle?.(e.target.value);
+           setContent?.(e.target.value);
+      }}
         className={`shadow-sm  w-sm ${Height}   border border-gray-200 pl-4 text-[13px] mt-2  rounded-[10px]`}
         type="text"
         placeholder={PlaceHolder}
@@ -99,12 +120,12 @@ function ContentSource() {
         <ContentSourceIcons Icon={FaXTwitter} IconText={"Xtwitter"} />
         <ContentSourceIcons
           Icon={FaYoutube}
-          IconText={"Youtube"}
+          IconText={"Videos"}
           IconColor="red"
         />
         <ContentSourceIcons
           Icon={FaGlobe}
-          IconText={"Website"}
+          IconText={"Links"}
           IconColor="purple"
         />
         <ContentSourceIcons
@@ -139,7 +160,7 @@ function ContentSourceIcons({ Icon, IconText, IconColor, EndIcon }: Icons) {
           setOtherContent((value) => !value);
         }}
       >
-        {EndIcon && <EndIcon size={10} />}
+        {EndIcon && <EndIcon size={10} className="hover:cursor-pointer" />}
       </button>
     </div>
   );
@@ -190,7 +211,7 @@ export function AddOtherContent() {
   );
 }
 
-function Tags() {
+function Tags({setAllTags}:TagsProps) {
   const [tags, setTags] = useRecoilState(TagValue);
   const [input, setInput] = useState("");
 

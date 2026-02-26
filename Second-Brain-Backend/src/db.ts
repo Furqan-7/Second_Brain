@@ -21,7 +21,7 @@ const tagSchema = new Schema({
 });
 
 
-const ContetnTypes = ["image" , "video" , "artival", "audio"];
+const ContetnTypes = ["Tweet","image" ,"video" , "artival", "audio" ,"Links","Document"];
 
 
 
