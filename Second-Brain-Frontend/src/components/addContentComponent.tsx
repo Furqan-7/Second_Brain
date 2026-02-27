@@ -24,17 +24,20 @@ import { useState } from "react";
 import { set } from "mongoose";
 import { TagValue } from "../atoms/TagValueAtom";
 import { Input } from "postcss";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 interface InputBox {
   Text: string;
   PlaceHolder: string;
   Height: string;
-  setTitle?:(value : string) => void;
-  setContent?:(value:string) => void;
+  setTitle?: (value: string) => void;
+  setContent?: (value: string) => void;
 }
 
-interface TagsProps{
-   setAllTags:(value : string[]) =>void;
+interface TagsProps {
+  tags: string[];
+  setAllTags: (value: string[]) => void;
 }
 
 interface Icons {
@@ -46,18 +49,31 @@ interface Icons {
 
 // This is Main Layout of the Add Content Component
 export function AddContent() {
+   const setAddContent = useSetRecoilState(addContent);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setAllTags] = useState<string[]>([]);
+  const token = localStorage.getItem("token");
+  const decoded = jwtDecode<{ userId: string }>(token!);
+ const userId = decoded.userId;
 
-  const [title,setTitle] = useState("");
-  const [content,setContent] = useState("");
-  const [tags,setAllTags] = useState<string[]>([]);
-
+  const handleAddContent = async()=>{
+        const Response = await axios.post("http://localhost:3000/api/v1/content",{
+            link:content,
+            type: "document",
+            title:title,
+            tags:tags,
+            userId:userId
+        })
+        setAddContent((value) => !value);
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center">
       <div className="bg-white shadow-xl/30 w-[435px] h-auto rounded-lg ">
         <XmarkButton />
         <ContentTitle
-         setTitle={setTitle}
+          setTitle={setTitle}
           Text={"Title"}
           PlaceHolder={"Enter a title..."}
           Height={"h-9"}
@@ -69,10 +85,17 @@ export function AddContent() {
           PlaceHolder={"Paste your content or link here..."}
           Height={"h-10"}
         />
-        <Tags
-        setAllTags={setAllTags}
-        />
-        <AddContentButton />
+        <Tags tags={tags} setAllTags={setAllTags} />
+            
+        {/* Add Content Button  */}
+        <div>
+          <button
+           onClick={handleAddContent}
+            className="w-sm h-9 bg-[#505bd0] text-white text-[14px] hover:cursor-pointer font-semibold ml-6 rounded-[8px] mt-4 mb-6 "
+          >
+            Add Content
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -88,22 +111,32 @@ function XmarkButton() {
           setAddContent((value) => !value);
         }}
       >
-        <img className="hover:cursor-pointer" src={Xmark} alt="Xmark" width={20}></img>
+        <img
+          className="hover:cursor-pointer"
+          src={Xmark}
+          alt="Xmark"
+          width={20}
+        ></img>
       </button>
     </div>
   );
 }
 
-function ContentTitle({ Text, PlaceHolder, Height,setTitle,setContent }: InputBox) {
-  
-
+function ContentTitle({
+  Text,
+  PlaceHolder,
+  Height,
+  setTitle,
+  setContent,
+}: InputBox) {
   return (
     <div className="pl-6 pr-6 pt-4">
       <p className="font-semibold text-[14px] tracking-wide">{Text}</p>
-      <input onChange={(e)=>{
-           setTitle?.(e.target.value);
-           setContent?.(e.target.value);
-      }}
+      <input
+        onChange={(e) => {
+          setTitle?.(e.target.value);
+          setContent?.(e.target.value);
+        }}
         className={`shadow-sm  w-sm ${Height}   border border-gray-200 pl-4 text-[13px] mt-2  rounded-[10px]`}
         type="text"
         placeholder={PlaceHolder}
@@ -211,14 +244,13 @@ export function AddOtherContent() {
   );
 }
 
-function Tags({setAllTags}:TagsProps) {
-  const [tags, setTags] = useRecoilState(TagValue);
+function Tags({ setAllTags, tags }: TagsProps) {
   const [input, setInput] = useState("");
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter" && input.trim() !== "") {
       e.preventDefault();
-      setTags([...tags, input.trim()]);
+      setAllTags([...tags, input.trim()]);
       setInput("");
     }
   };
@@ -226,7 +258,7 @@ function Tags({setAllTags}:TagsProps) {
   const RemoveTag = (index: number) => {
     const updated = [...tags];
     updated.splice(index, 1);
-    setTags(updated);
+    setAllTags(updated);
   };
 
   return (
@@ -264,13 +296,16 @@ function Tags({setAllTags}:TagsProps) {
   );
 }
 
-function AddContentButton() {
-   const setAddContent = useSetRecoilState(addContent);
-  return (
-    <div>
-      <button onClick={() => setAddContent(value => !value)} className="w-sm h-9 bg-[#505bd0] text-white text-[14px] hover:cursor-pointer font-semibold ml-6 rounded-[8px] mt-4 mb-6 ">
-        Add Content
-      </button>
-    </div>
-  );
-}
+// function AddContentButton() {
+
+//   return (
+//     <div>
+//       <button
+//         onClick={() => setAddContent((value) => !value)}
+//         className="w-sm h-9 bg-[#505bd0] text-white text-[14px] hover:cursor-pointer font-semibold ml-6 rounded-[8px] mt-4 mb-6 "
+//       >
+//         Add Content
+//       </button>
+//     </div>
+//   );
+// }
