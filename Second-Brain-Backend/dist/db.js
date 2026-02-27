@@ -13,7 +13,7 @@ const UserSchema = new Schema({
 const tagSchema = new Schema({
     title: { type: String, required: true, unique: true },
 });
-const ContetnTypes = ["image", "video", "artival", "audio"];
+const ContetnTypes = ["Tweet", "image", "video", "artival", "audio", "Links", "Document"];
 const contentSchema = new Schema({
     link: { type: String, required: true },
     type: { type: String, enum: ContetnTypes, required: true },
