@@ -65,6 +65,7 @@ export function AddContent() {
             tags:tags,
             userId:userId
         })
+        console.log(Response)
         setAddContent((value) => !value);
   }
 
