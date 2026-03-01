@@ -1,7 +1,7 @@
 import express from "express";
 import { string, success, z } from "zod";
 import jwt, {} from "jsonwebtoken";
-import { ContentModel, LinkModel, UserModel } from "./db.js";
+import { ContentModel, LinkModel, Tag, UserModel } from "./db.js";
 import bcrypt from "bcrypt";
 import mongoose, { mongo } from "mongoose";
 import { MiddleWhere } from "./MiddleWhere.js";
@@ -99,6 +99,7 @@ app.post("/api/v1/signin", async (req, res) => {
     }
 });
 app.post("/api/v1/content", MiddleWhere, async (req, res) => {
+    console.log("Resched Content ");
     const Response = await contentSchema.safeParse(req.body);
     if (!Response.success) {
         return res.status(ResponseStatus.BadRequest).json({
@@ -138,6 +139,23 @@ app.post("/api/v1/content", MiddleWhere, async (req, res) => {
         res.status(ResponseStatus.BadRequest).json({
             message: "Process Failed ! ",
             Error: e,
+        });
+    }
+});
+app.post("/tag", async (req, res) => {
+    const title = req.body.title;
+    try {
+        // Check if tha tags already eixts 
+        let tag = await Tag.findOne({ title });
+        if (!tag) {
+            tag = await Tag.create({ title });
+        }
+        res.status(ResponseStatus.Success).json({ tag });
+    }
+    catch (e) {
+        return res.status(ResponseStatus.BadRequest).json({
+            message: "Failed to Create a Tag",
+            error: e
         });
     }
 });
