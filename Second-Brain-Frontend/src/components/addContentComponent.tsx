@@ -25,7 +25,7 @@ import { set } from "mongoose";
 import { TagValue } from "../atoms/TagValueAtom";
 import { Input } from "postcss";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 interface InputBox {
   Text: string;
@@ -38,6 +38,9 @@ interface InputBox {
 interface TagsProps {
   tags: string[];
   setAllTags: (value: string[]) => void;
+  tagIds:string[],
+  setTagIds:(value:string[]) =>void;
+
 }
 
 interface Icons {
@@ -50,22 +53,35 @@ interface Icons {
 // This is Main Layout of the Add Content Component
 export function AddContent() {
    const setAddContent = useSetRecoilState(addContent);
+
   const [title, setTitle] = useState("");
+
   const [content, setContent] = useState("");
+
   const [tags, setAllTags] = useState<string[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
+
+
   const token = localStorage.getItem("token");
   const decoded = jwtDecode<{ userId: string }>(token!);
  const userId = decoded.userId;
 
-  const handleAddContent = async()=>{
+  const handleAddContent = async ()=>{
+
+      console.log(content);
+      console.log(title);
+      console.log(tags);
+      console.log(userId);
+       
         const Response = await axios.post("http://localhost:3000/api/v1/content",{
             link:content,
             type: "document",
             title:title,
-            tags:tags,
+            tags:["699cabc123456789abcd1234"],
             userId:userId
         })
         console.log(Response)
+        console.log("Hello")
         setAddContent((value) => !value);
   }
 
@@ -86,7 +102,7 @@ export function AddContent() {
           PlaceHolder={"Paste your content or link here..."}
           Height={"h-10"}
         />
-        <Tags tags={tags} setAllTags={setAllTags} />
+        <Tags tags={tags} setAllTags={setAllTags} tagIds={tagIds} setTagIds={setTagIds} />
             
         {/* Add Content Button  */}
         <div>
@@ -245,13 +261,22 @@ export function AddOtherContent() {
   );
 }
 
-function Tags({ setAllTags, tags }: TagsProps) {
+function Tags({ setAllTags, tags,tagIds,setTagIds }: TagsProps) {
+
+  // State variable to get the input value 
   const [input, setInput] = useState("");
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async(e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter" && input.trim() !== "") {
+      const Response = await axios.post("http://localhost:3000/tag",{
+         title:input.trim()
+      });
+
+      // console.log(Response.data.tag.id);
+      setTagIds([...tagIds,Response.data.tag.id]);
+       
       e.preventDefault();
-      setAllTags([...tags, input.trim()]);
+      setAllTags([...tags,input.trim()]);
       setInput("");
     }
   };
