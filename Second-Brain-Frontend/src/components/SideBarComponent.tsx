@@ -14,6 +14,12 @@ interface SideBarProps {
 
 export function SideBar() {
   const Navigate = useNavigate();
+   
+  const handleLogout = ()=>{
+        localStorage.removeItem("token");
+        Navigate("/");
+  }
+
   return (
     <div className="flex flex-col w-20 md:w-56 lg:w-72 min-h-screen border border-gray-300 shadow-xl/30 sticky top-0 self-start">
       <div className="flex items-center mt-5 ml-5 mr-5 gap-2">
@@ -38,7 +44,7 @@ export function SideBar() {
 
       <div className="mt-4 mb-8">
         <div
-          onClick={() => Navigate("/")}
+          onClick={handleLogout}
           className="flex ml-6 mr-6 rounded-[10px] gap-10 justify-center items-center h-10 bg-red-200 hover:cursor-pointer"
         >
           <div className="text-red-500">Log Out</div>

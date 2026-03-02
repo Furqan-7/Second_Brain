@@ -30,12 +30,21 @@ function Signup() {
         password: password,
       });
 
-       
-
       if (Response.data.valid) {
-        localStorage.setItem("token", Response.data.token);
+        Navigate("/Dashboard");
+        const token = Response.data.token;
+        localStorage.setItem("token", token);
+        const contents = await axios.get(
+          "http://localhost:3000/api/v1/content",
+          {
+            headers: {
+              token: token,
+            },
+          },
+        );
+
+        console.log(contents);
       }
-      Navigate("/Dashboard");
     } catch (e) {
       alert("Somethign went wrong");
     }

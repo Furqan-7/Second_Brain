@@ -1,31 +1,24 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { addContent } from "../atoms/addContentAtom";
-import type { FormEvent, KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
 import {
   FaAngleDown,
-  FaArrowDown,
-  FaFile,
   FaGlobe,
-  FaInstagram,
   FaLinkedin,
-  FaLinkedinIn,
   FaSquareInstagram,
-  FaWordpressSimple,
   FaXTwitter,
 } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa6";
 import Xmark from "../assets/xmark.svg";
 import type { IconType } from "react-icons";
-import { FaFileExcel, FaInstagramSquare, FaSave } from "react-icons/fa";
+
 import { CiFileOn } from "react-icons/ci";
 import { OtherContent } from "../atoms/OtherContentAtom";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { useState } from "react";
-import { set } from "mongoose";
-import { TagValue } from "../atoms/TagValueAtom";
-import { Input } from "postcss";
+
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 interface InputBox {
   Text: string;
@@ -38,9 +31,8 @@ interface InputBox {
 interface TagsProps {
   tags: string[];
   setAllTags: (value: string[]) => void;
-  tagIds:string[],
-  setTagIds:(value:string[]) =>void;
-
+  tagIds: string[];
+  setTagIds: (value: string[]) => void;
 }
 
 interface Icons {
@@ -52,7 +44,7 @@ interface Icons {
 
 // This is Main Layout of the Add Content Component
 export function AddContent() {
-   const setAddContent = useSetRecoilState(addContent);
+  const setAddContent = useSetRecoilState(addContent);
 
   const [title, setTitle] = useState("");
 
@@ -61,29 +53,30 @@ export function AddContent() {
   const [tags, setAllTags] = useState<string[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
 
-
   const token = localStorage.getItem("token");
-  const decoded = jwtDecode<{ userId: string }>(token!);
- const userId = decoded.userId;
 
-  const handleAddContent = async ()=>{
+  const handleAddContent = async () => {
+     try{
+          const Response = await axios.post(
+      "http://localhost:3000/api/v1/content",
+      {
+        link: content,
+        type: "Document",
+        title: title,
+        tags: tagIds
+      },
+      {
+        headers: {
+          token:token
+        },
+      },
+    );
+    setAddContent((value) => !value);
+     }catch(e){
+       console.log(e);
+     }
 
-      console.log(content);
-      console.log(title);
-      console.log(tags);
-      console.log(userId);
-       
-        const Response = await axios.post("http://localhost:3000/api/v1/content",{
-            link:content,
-            type: "document",
-            title:title,
-            tags:["699cabc123456789abcd1234"],
-            userId:userId
-        })
-        console.log(Response)
-        console.log("Hello")
-        setAddContent((value) => !value);
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center">
@@ -102,12 +95,17 @@ export function AddContent() {
           PlaceHolder={"Paste your content or link here..."}
           Height={"h-10"}
         />
-        <Tags tags={tags} setAllTags={setAllTags} tagIds={tagIds} setTagIds={setTagIds} />
-            
+        <Tags
+          tags={tags}
+          setAllTags={setAllTags}
+          tagIds={tagIds}
+          setTagIds={setTagIds}
+        />
+
         {/* Add Content Button  */}
         <div>
           <button
-           onClick={handleAddContent}
+            onClick={handleAddContent}
             className="w-sm h-9 bg-[#505bd0] text-white text-[14px] hover:cursor-pointer font-semibold ml-6 rounded-[8px] mt-4 mb-6 "
           >
             Add Content
@@ -261,22 +259,20 @@ export function AddOtherContent() {
   );
 }
 
-function Tags({ setAllTags, tags,tagIds,setTagIds }: TagsProps) {
-
-  // State variable to get the input value 
+function Tags({ setAllTags, tags, tagIds, setTagIds }: TagsProps) {
+  // State variable to get the input value
   const [input, setInput] = useState("");
 
-  const handleKeyDown = async(e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter" && input.trim() !== "") {
-      const Response = await axios.post("http://localhost:3000/tag",{
-         title:input.trim()
+      const Response = await axios.post("http://localhost:3000/tag", {
+        title: input.trim(),
       });
 
-      // console.log(Response.data.tag.id);
-      setTagIds([...tagIds,Response.data.tag.id]);
-       
+      setTagIds([...tagIds, Response.data.tag._id]);
+
       e.preventDefault();
-      setAllTags([...tags,input.trim()]);
+      setAllTags([...tags, input.trim()]);
       setInput("");
     }
   };
