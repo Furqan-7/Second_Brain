@@ -14,7 +14,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
 const ValidSchema = z.object({
   username: z.string().min(3).max(20),
   password: z
@@ -26,7 +25,7 @@ const ValidSchema = z.object({
 });
 
 const contentSchema = z.object({
-  link: z.string().url(),
+  link: z.string(),
   type: z.string(),
   title: z.string(),
   tags: z.array(z.string()).optional(),
@@ -48,7 +47,7 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
   if (!Response.success) {
     return res.status(ResponseStatus.BadRequest).json({
       message: "Please Enter Correct Username and Password and ",
-      Response: Response,
+      Response: Response.error,
     });
   }
 
@@ -65,17 +64,15 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
 
     return res.status(ResponseStatus.Success).json({
       message: "Signup Success",
-       valid:true
+      valid: true,
     });
   } catch (e) {
     return res.status(ResponseStatus.BadRequest).json({
       message: "Signup failed",
-      valid:false
+      valid: false,
     });
   }
 });
-
-
 
 app.post("/api/v1/signin", async (req: Request, res: Response) => {
   const Response = ValidSchema.safeParse(req.body);
@@ -111,18 +108,20 @@ app.post("/api/v1/signin", async (req: Request, res: Response) => {
     return res.status(ResponseStatus.Success).json({
       token: token,
       message: "Sign up Sucessfully ",
-      valid:true
+      valid: true,
     });
   }
 });
 
 app.post("/api/v1/content", MiddleWhere, async (req, res) => {
-  console.log("Resched Content ");
   const Response = await contentSchema.safeParse(req.body);
+
+ 
 
   if (!Response.success) {
     return res.status(ResponseStatus.BadRequest).json({
       message: "Incorrect Format",
+      error: Response.error,
     });
   }
 
@@ -138,7 +137,7 @@ app.post("/api/v1/content", MiddleWhere, async (req, res) => {
       _id: data.userId,
     });
 
-    console.log("reached user");
+
 
     if (!user) {
       return res.status(ResponseStatus.NotFound).json({
@@ -146,7 +145,7 @@ app.post("/api/v1/content", MiddleWhere, async (req, res) => {
       });
     }
 
-    console.log("reached content");
+ 
 
     const content = await ContentModel.create({
       link: data.link,
@@ -168,29 +167,29 @@ app.post("/api/v1/content", MiddleWhere, async (req, res) => {
   }
 });
 
-app.post("/tag",async(req,res)=>{
-      const title = req.body.title;
+app.post("/tag", async (req, res) => {
+  const title = req.body.title;
 
-      try{
+  try {
+    // Check if tha tags already eixts
+    let tag = await Tag.findOne({ title });
 
-        // Check if tha tags already eixts 
-        let tag = await Tag.findOne({title});
-
-        if(!tag){
-           tag = await Tag.create({title});
-
-        }
-        res.status(ResponseStatus.Success).json({tag});
-      }catch(e){
-          return res.status(ResponseStatus.BadRequest).json({
-              message:"Failed to Create a Tag",
-              error:e
-          })
-      }
-})
+    if (!tag) {
+      tag = await Tag.create({ title });
+    }
+    res.status(ResponseStatus.Success).json({ tag });
+  } catch (e) {
+    return res.status(ResponseStatus.BadRequest).json({
+      message: "Failed to Create a Tag",
+      error: e,
+    });
+  }
+});
 
 app.get("/api/v1/content", MiddleWhere, async (req, res) => {
   const userId = req.body.userId;
+
+   console.log("Reschaed Content get ");
 
   console.log(userId);
 
@@ -261,7 +260,6 @@ app.post("/api/v1/brain/share", MiddleWhere, async (req, res) => {
 
   console.log(Share);
   console.log(userId);
-
 
   if (Share) {
     const Link = await LinkModel.create({

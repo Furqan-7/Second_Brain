@@ -22,6 +22,8 @@ function Signup() {
   const Navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const token = localStorage.getItem("token");
   
 
 const handleCreateAccount = async () => {
