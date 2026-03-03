@@ -19,6 +19,7 @@ import { useState } from "react";
 
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useFetchContents } from "../hooks/useContnet";
 
 interface InputBox {
   Text: string;
@@ -45,6 +46,7 @@ interface Icons {
 // This is Main Layout of the Add Content Component
 export function AddContent() {
   const setAddContent = useSetRecoilState(addContent);
+  const fetchContents = useFetchContents();
 
   const [title, setTitle] = useState("");
 
@@ -56,26 +58,26 @@ export function AddContent() {
   const token = localStorage.getItem("token");
 
   const handleAddContent = async () => {
-     try{
-          const Response = await axios.post(
-      "http://localhost:3000/api/v1/content",
-      {
-        link: content,
-        type: "Document",
-        title: title,
-        tags: tagIds
-      },
-      {
-        headers: {
-          token:token
+    try {
+      const Response = await axios.post(
+        "http://localhost:3000/api/v1/content",
+        {
+          link: content,
+          type: "Document",
+          title: title,
+          tags: tagIds,
         },
-      },
-    );
-    setAddContent((value) => !value);
-     }catch(e){
-       console.log(e);
-     }
-
+        {
+          headers: {
+            token: token,
+          },
+        },
+      );
+      await fetchContents();
+      setAddContent((value) => !value);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

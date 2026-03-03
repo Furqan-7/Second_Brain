@@ -4,6 +4,7 @@ import Google from "../assets/google.png";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useFetchContents } from "../hooks/useContnet";
 
 export function SigninComponent() {
   return (
@@ -22,6 +23,7 @@ function Signup() {
   const Navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const fetchContents = useFetchContents();
 
   const handleCreateAccount = async () => {
     try {
@@ -34,16 +36,7 @@ function Signup() {
         Navigate("/Dashboard");
         const token = Response.data.token;
         localStorage.setItem("token", token);
-        const contents = await axios.get(
-          "http://localhost:3000/api/v1/content",
-          {
-            headers: {
-              token: token,
-            },
-          },
-        );
-
-        console.log(contents);
+        await fetchContents();
       }
     } catch (e) {
       alert("Somethign went wrong");
