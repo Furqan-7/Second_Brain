@@ -114,10 +114,14 @@ app.post("/api/v1/signin", async (req: Request, res: Response) => {
 });
 
 app.post("/api/v1/content", MiddleWhere, async (req, res) => {
-  const Response = await contentSchema.safeParse(req.body);
-
- 
-
+  const Response = await contentSchema.safeParse({
+    link:req.body.link,
+    type:req.body.type,
+    title:req.body.title,
+    tags:req.body.tags,
+    userId:res.locals.userId
+  });
+  
   if (!Response.success) {
     return res.status(ResponseStatus.BadRequest).json({
       message: "Incorrect Format",
@@ -187,9 +191,9 @@ app.post("/tag", async (req, res) => {
 });
 
 app.get("/api/v1/content", MiddleWhere, async (req, res) => {
-  const userId = req.body.userId;
+  const userId = res.locals.userId;
 
-   console.log("Reschaed Content get ");
+  console.log("Reschaed Content get ");
 
   console.log(userId);
 
@@ -202,7 +206,8 @@ app.get("/api/v1/content", MiddleWhere, async (req, res) => {
   console.log(userId);
 
   try {
-    const content = await ContentModel.find({ userId });
+    const content = await ContentModel.find({ userId })
+    .populate("tags");
     if (!content) {
       return res.status(ResponseStatus.NotFound).json({
         message: "Not Found",
@@ -220,6 +225,7 @@ app.get("/api/v1/content", MiddleWhere, async (req, res) => {
     });
   }
 });
+
 
 app.delete("/api/v1/content", MiddleWhere, async (req, res) => {
   const userId = req.body.userId;

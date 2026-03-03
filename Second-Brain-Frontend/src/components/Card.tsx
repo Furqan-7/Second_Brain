@@ -22,7 +22,7 @@ export const Card = () => {
 
 
   return (
-    <div className=" shadow-2xl w-60 h-auto border border-gray-200 rounded-lg ">
+     <div className=" shadow-2xl w-60 h-auto border border-gray-200 rounded-lg ">
       {/* First Section  */}
       <div className="flex justify-between pt-4 pl-4 pr-4">
         <div className="flex items-center gap-2">

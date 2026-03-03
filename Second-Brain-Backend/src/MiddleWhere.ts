@@ -11,6 +11,9 @@ export async function MiddleWhere(
   // Extract token from request headers
   const token = req.headers.token;
 
+  console.log(token);
+  console.log("Reached Middle Where ");
+
   // Reject if token is missing or sent as an array
   if (!token || Array.isArray(token)) {
     return res.status(ResponseStatus.NotFound).json({
@@ -18,6 +21,8 @@ export async function MiddleWhere(
     });
   }
 
+
+  console.log("Reached Middle Where 2");
   interface TokenPayload {
     userId: string;
   }
@@ -40,8 +45,14 @@ export async function MiddleWhere(
       });
     }
 
+      console.log("Reached Middle Where 3");
+
+      
+
     // Attach userId to request body and proceed to next middleware
-    req.body.userId = decoded.userId;
+     res.locals.userId = decoded.userId;
+     console.log(decoded.userId);
+     console.log("Reached Middle Where 4");
     next();
   } catch (e) {
     // Handle expired or tampered tokens
