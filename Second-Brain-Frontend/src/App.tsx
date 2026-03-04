@@ -57,8 +57,12 @@ function Layout() {
         </div>
 
         <div className="flex ml-8 lg:ml-16 mt-10  flex-wrap gap-8 lg:gap-13 mb-20 ">
-          {contents.map((content, index) => (
-            <Card />
+
+
+          {contents.map((c, index) => (
+            <div key={index}>
+              <Card id={c._id} title={c.title}  content={c.link} tags={c.tags.map((tags)=> tags.title)} />
+            </div>
           ))}
         </div>
       </div>
