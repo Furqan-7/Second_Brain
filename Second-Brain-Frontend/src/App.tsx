@@ -16,6 +16,8 @@ import { SignupComponent } from "./components/Signup.tsx";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { SigninComponent } from "./components/Signin.tsx";
 import { contentAtom } from "./atoms/Contents.tsx";
+import { useFetchContents } from "./hooks/useContnet.tsx";
+import { useEffect } from "react";
 
 function App() {
   return (
@@ -38,6 +40,12 @@ function Layout() {
   const contents = useRecoilValue(contentAtom);
   console.log(contents);
 
+  const fetchContents = useFetchContents();
+
+  useEffect(() => {
+    fetchContents();
+  }, []);
+
   return (
     <div className="bg-white flex min-h-screen ">
       {/* Side Bar  */}
@@ -57,11 +65,14 @@ function Layout() {
         </div>
 
         <div className="flex ml-8 lg:ml-16 mt-10  flex-wrap gap-8 lg:gap-13 mb-20 ">
-
-
           {contents.map((c, index) => (
             <div key={index}>
-              <Card id={c._id} title={c.title}  content={c.link} tags={c.tags.map((tags)=> tags.title)} />
+              <Card
+                id={c._id}
+                title={c.title}
+                content={c.link}
+                tags={c.tags.map((tags) => tags.title)}
+              />
             </div>
           ))}
         </div>
