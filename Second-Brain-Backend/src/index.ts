@@ -228,8 +228,10 @@ app.get("/api/v1/content", MiddleWhere, async (req, res) => {
 
 
 app.delete("/api/v1/content", MiddleWhere, async (req, res) => {
-  const userId = req.body.userId;
+  const userId = res.locals.userId;
   const ContentId = req.body.ContentId;
+
+  console.log("Reached Delete");
 
   if (!mongoose.isValidObjectId(ContentId)) {
     return res.status(ResponseStatus.BadRequest).json({
