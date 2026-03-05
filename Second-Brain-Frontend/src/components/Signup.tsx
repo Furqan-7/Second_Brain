@@ -8,7 +8,7 @@ import { useState } from "react";
 export function SignupComponent() {
   return (
     <div>
-      <div className="flex justify-center items-center mt-10">
+      <div className="flex justify-center items-center mt-8">
         <div className="shadow-xl/30 border  border-gray-200 w-[400px]  rounded-2xl h-auto">
           <Logo />
           <Signup />
@@ -22,8 +22,7 @@ function Signup() {
   const Navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const token = localStorage.getItem("token");
+  const [exits,SetExits] = useState(false);
   
 
 const handleCreateAccount = async () => {
@@ -44,7 +43,7 @@ const handleCreateAccount = async () => {
 
   } catch (error) {
     console.error(error);
-    alert("Something went wrong");
+    SetExits(true);
   }
 };
 
@@ -62,6 +61,9 @@ const handleCreateAccount = async () => {
         <input onChange={(e)=>{
             setUsername(e.target.value);
         }}
+        onClick={()=>{
+          SetExits(false);
+        }}
           className={`shadow-sm w-80 h-9 tracking-wider font-medium   border border-gray-200 pl-4 text-[13px] mt-2  rounded-[10px]`}
           type="text"
           placeholder="Username"
@@ -78,6 +80,10 @@ const handleCreateAccount = async () => {
         ></input>
       </div>
 
+      {exits ? <div className="flex justify-center items-center mt-2">
+          <p className="text-red-400 text-[14px]">The user already exits</p>
+      </div> : null}
+
       <div>
         <button
           onClick={handleCreateAccount}
@@ -91,7 +97,7 @@ const handleCreateAccount = async () => {
       <GoogleSignup />
       <GitHubSignup />
 
-      <div className="flex justify-center items-center mt-4 mb-6">
+      <div className="flex justify-center items-center mt-4 mb-4">
         <p>
           Already have an account?{" "}
           <button

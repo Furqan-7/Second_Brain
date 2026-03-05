@@ -38,10 +38,8 @@ function Layout() {
   const Othercontent = useRecoilValue(OtherContent);
   const Share = useRecoilValue(ShareAtom);
   const contents = useRecoilValue(contentAtom);
-  console.log(contents);
 
   const fetchContents = useFetchContents();
-
   useEffect(() => {
     fetchContents();
   }, []);

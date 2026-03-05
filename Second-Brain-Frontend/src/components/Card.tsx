@@ -3,6 +3,8 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 import { GrShareOption } from "react-icons/gr";
 import { useRef, useState, type ReactNode } from "react";
 import axios from "axios";
+import { useFetchContents } from "../hooks/useContnet";
+import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 
 // interface CardProps {
 //   startIcon: React.ReactNode;
@@ -24,13 +26,16 @@ interface CardProps {
 export const Card = ({ id,title, content, tags }: CardProps) => {
   const date: Date = new Date();
   const token = localStorage.getItem("token");
+    const fetchContents = useFetchContents();
 
   const handleDeleteContent = async ()=>{
+         console.log(id)
         try{
            await axios.delete("http://localhost:3000/api/v1/content",{
                headers: { token },
-               data:{id}
-           })
+               data:{ContentId:id}
+           });
+           await fetchContents();
         }catch(e){
             console.log("Failed to Delete Content " + "Error " + e);
         }
@@ -41,7 +46,9 @@ export const Card = ({ id,title, content, tags }: CardProps) => {
       {/* First Section  */}
       <div className="flex justify-between pt-4 pl-4 pr-4">
         <div className="flex items-center gap-2">
-          <HiOutlineDocumentText color="gray" size={25} />
+          {/* <FaYoutube color="red" size={23} /> */}
+          <FaXTwitter color="black" size={23} />
+          {/* <HiOutlineDocumentText color="gray" size={23} /> */}
           <p className="font-[550] text-[15px]">{title} </p>
         </div>
 
