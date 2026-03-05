@@ -199,6 +199,7 @@ app.delete("/api/v1/content", MiddleWhere, async (req, res) => {
     const userId = res.locals.userId;
     const ContentId = req.body.ContentId;
     console.log("Reached Delete");
+    console.log(ContentId);
     if (!mongoose.isValidObjectId(ContentId)) {
         return res.status(ResponseStatus.BadRequest).json({
             message: "Invalid Content id ",
