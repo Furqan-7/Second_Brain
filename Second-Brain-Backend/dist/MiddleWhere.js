@@ -4,15 +4,13 @@ import { ENV } from "./config/env.js";
 export async function MiddleWhere(req, res, next) {
     // Extract token from request headers
     const token = req.headers.token;
-    console.log(token);
-    console.log("Reached Middle Where ");
+    console.log("Reached Middle Where ", token);
     // Reject if token is missing or sent as an array
     if (!token || Array.isArray(token)) {
         return res.status(ResponseStatus.NotFound).json({
             message: "Token is expired ",
         });
     }
-    console.log("Reached Middle Where 2");
     try {
         // Verify token signature and decode payload
         const decoded = jwt.verify(token, ENV.JWT_TOKEN);
@@ -28,11 +26,8 @@ export async function MiddleWhere(req, res, next) {
                 message: "Invalid token payload",
             });
         }
-        console.log("Reached Middle Where 3");
         // Attach userId to request body and proceed to next middleware
         res.locals.userId = decoded.userId;
-        console.log(decoded.userId);
-        console.log("Reached Middle Where 4");
         next();
     }
     catch (e) {

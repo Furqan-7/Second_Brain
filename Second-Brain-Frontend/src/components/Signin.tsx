@@ -9,7 +9,7 @@ import { useFetchContents } from "../hooks/useContnet";
 export function SigninComponent() {
   return (
     <div>
-      <div className="flex justify-center items-center mt-10">
+      <div className="flex justify-center items-center mt-8">
         <div className="shadow-xl/30 border  border-gray-200 w-[400px]  rounded-2xl h-auto">
           <Logo />
           <Signup />
@@ -25,6 +25,8 @@ function Signup() {
   const [password, setPassword] = useState("");
   const fetchContents = useFetchContents();
 
+  const[exits,setExits] = useState(false);
+
   const handleCreateAccount = async () => {
     try {
       const Response = await axios.post("http://localhost:3000/api/v1/signin", {
@@ -39,7 +41,7 @@ function Signup() {
         await fetchContents();
       }
     } catch (e) {
-      alert("Somethign went wrong");
+      setExits(true);
     }
   };
 
@@ -51,7 +53,7 @@ function Signup() {
   }, []);
 
   return (
-    <div className="shadow-xl/30 w-[370px]  h-auto ml-3.5 mt-4 rounded-2xl border border-gray-200 mb-10 ">
+    <div className="shadow-xl/30 w-[370px]  h-auto ml-3.5 mt-4 rounded-2xl border border-gray-200 mb-7 ">
       <div className="flex justify-center items-center mt-4">
         <p className="font-semibold text-[23px]">Sign In</p>
       </div>
@@ -60,6 +62,7 @@ function Signup() {
         <input
           onChange={(e) => {
             setUsername(e.target.value);
+            setExits(false);
           }}
           className={`shadow-sm w-80 h-9 tracking-wider font-medium   border border-gray-200 pl-4 text-[13px] mt-2  rounded-[10px]`}
           type="text"
@@ -77,6 +80,9 @@ function Signup() {
           placeholder="Password"
         ></input>
       </div>
+         {exits ? <div className="flex justify-center items-center mt-2">
+          <p className="text-red-400 text-[14px]">Incorrect Username/Password</p>
+      </div> : null}
 
       <div>
         <button
