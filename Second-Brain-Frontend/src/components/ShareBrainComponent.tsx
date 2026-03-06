@@ -3,18 +3,28 @@ import Xmark from "../assets/xmark.svg";
 import { ShareAtom } from "../atoms/ShareAtom";
 import { useEffect, useState } from "react";
 import { Hash } from "lucide-react";
+import axios from "axios";
 
 export function ShareBrain() {
-  const [ShareValue ,setShareAtom] = useRecoilState(ShareAtom);
+  const [ShareValue, setShareAtom] = useRecoilState(ShareAtom);
   const [link, setLink] = useState(false);
+  const [hash,setHash] = useState("");
+  const token = localStorage.getItem("token");
 
-  const Hash = "ajksdhaskdyfaiusd";
+  
 
+  const handleShare = async () => {
+    const Response = await axios.post(
+      "http://localhost:3000/api/v1/brain/share",
+      { Share: true },
+      {
+        headers: { token: token },
+      },
+    );
+    console.log(Response.data.hash);
+    setHash(Response.data.hash.hash);
 
-
-
-  const handleShare = () => {
-    setLink(value => !value);
+    setLink((value) => !value);
   };
 
   return (
@@ -41,14 +51,14 @@ export function ShareBrain() {
           </p>
         </div>
 
-        {link ? <ShareLink Hash={Hash} /> : null}
+        {link ? <ShareLink hash={hash} /> : null}
 
         <div>
           <button
             onClick={handleShare}
             className="w-[290px] h-9 bg-[#505bd0] text-white text-[14px] hover:cursor-pointer font-medium ml-4 rounded-[8px] mt-4 mb-6 "
           >
-            {link ? "Got it"  : "Share Brain"}
+            {link ? "Got it" : "Share Brain"}
           </button>
         </div>
       </div>
@@ -57,13 +67,13 @@ export function ShareBrain() {
 }
 
 type ShareLinkProps = {
-  Hash: string;
+  hash: string;
 };
 
-function ShareLink({ Hash }: ShareLinkProps) {
+function ShareLink({ hash }: ShareLinkProps) {
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(Hash);
+      await navigator.clipboard.writeText(hash);
       alert("Copied!");
     } catch (e) {
       alert("Failed to Copy");
@@ -72,7 +82,7 @@ function ShareLink({ Hash }: ShareLinkProps) {
 
   return (
     <div className="flex justify-between pl-3 pr-2 items-center w-[290px] rounded-[8px] ml-4  mt-4 h-9 border border-gray-400 bg-gray-200">
-      <p>{Hash}</p>
+      <p>{hash}</p>
       <button
         onClick={handleCopy}
         className="bg-[#505bd0] hover:cursor-pointer text-white text-[11px] p-1 rounded-[5px]"

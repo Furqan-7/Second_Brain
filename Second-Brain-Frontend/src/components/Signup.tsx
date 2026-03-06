@@ -22,7 +22,7 @@ function Signup() {
   const Navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [exits,SetExits] = useState(false);
+  const [exits,setExits] = useState(false);
   
 
 const handleCreateAccount = async () => {
@@ -43,7 +43,7 @@ const handleCreateAccount = async () => {
 
   } catch (error) {
     console.error(error);
-    SetExits(true);
+    setExits(true);
   }
 };
 
@@ -52,7 +52,7 @@ const handleCreateAccount = async () => {
   };
 
   return (
-    <div className="shadow-xl/30 w-[370px]  h-auto ml-3.5 mt-4 rounded-2xl border border-gray-200 mb-10 ">
+    <div className="shadow-xl/30 w-[370px]  h-auto ml-3.5 mt-4 rounded-2xl border border-gray-200 mb-7 ">
       <div className="flex justify-center items-center mt-4">
         <p className="font-semibold text-[23px]">Sign Up</p>
       </div>
@@ -60,9 +60,7 @@ const handleCreateAccount = async () => {
       <div className="flex justify-center items-center mt-2">
         <input onChange={(e)=>{
             setUsername(e.target.value);
-        }}
-        onClick={()=>{
-          SetExits(false);
+            setExits(false);
         }}
           className={`shadow-sm w-80 h-9 tracking-wider font-medium   border border-gray-200 pl-4 text-[13px] mt-2  rounded-[10px]`}
           type="text"
@@ -81,7 +79,7 @@ const handleCreateAccount = async () => {
       </div>
 
       {exits ? <div className="flex justify-center items-center mt-2">
-          <p className="text-red-400 text-[14px]">The user already exits</p>
+          <p className="text-red-400 text-[14px]">Username already exists</p>
       </div> : null}
 
       <div>
@@ -97,7 +95,7 @@ const handleCreateAccount = async () => {
       <GoogleSignup />
       <GitHubSignup />
 
-      <div className="flex justify-center items-center mt-4 mb-4">
+      <div className="flex justify-center items-center mt-4 mb-6">
         <p>
           Already have an account?{" "}
           <button

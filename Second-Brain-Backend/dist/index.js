@@ -66,7 +66,6 @@ app.post("/api/v1/signup", async (req, res) => {
 });
 app.post("/api/v1/signin", async (req, res) => {
     const Response = ValidSchema.safeParse(req.body);
-    console.log("Reached Signin");
     if (!Response.success) {
         return res.status(ResponseStatus.BadRequest).json({
             message: "Please Enter Correct Username and Password",
@@ -165,14 +164,11 @@ app.post("/tag", async (req, res) => {
 });
 app.get("/api/v1/content", MiddleWhere, async (req, res) => {
     const userId = res.locals.userId;
-    console.log("Reschaed Content get ");
-    console.log(userId);
     if (!mongoose.isValidObjectId(userId)) {
         return res.status(ResponseStatus.NotFound).json({
             message: "Invalid userId",
         });
     }
-    console.log(userId);
     try {
         const content = await ContentModel.find({ userId })
             .populate("tags");
@@ -198,8 +194,6 @@ app.get("/api/v1/content", MiddleWhere, async (req, res) => {
 app.delete("/api/v1/content", MiddleWhere, async (req, res) => {
     const userId = res.locals.userId;
     const ContentId = req.body.ContentId;
-    console.log("Reached Delete");
-    console.log(ContentId);
     if (!mongoose.isValidObjectId(ContentId)) {
         return res.status(ResponseStatus.BadRequest).json({
             message: "Invalid Content id ",
@@ -230,7 +224,7 @@ app.delete("/api/v1/content", MiddleWhere, async (req, res) => {
 });
 app.post("/api/v1/brain/share", MiddleWhere, async (req, res) => {
     const Share = req.body.Share;
-    const userId = req.body.userId;
+    const userId = res.locals.userId;
     console.log(Share);
     console.log(userId);
     if (Share) {
