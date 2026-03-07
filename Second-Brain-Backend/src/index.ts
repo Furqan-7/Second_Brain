@@ -283,41 +283,7 @@ app.post("/api/v1/brain/share", MiddleWhere, async (req, res) => {
   }
 });
 
-app.get("/api/v1/brain/:shareLink", async (req, res) => {
-  const hash = req.params.shareLink;
 
-  const Link = await LinkModel.findOne({
-    hash,
-  });
-
-  if (!Link) {
-    return res.status(ResponseStatus.NotFound).json({
-      message: "Invalid Link",
-    });
-  }
-
-  try {
-    const content = await ContentModel.find({ userId: Link.userId });
-    const user = await UserModel.find({ _id: Link.userId });
-
-    if (!user) {
-      return res.status(ResponseStatus.Success).json({
-        message: "Something went wrong this usually doest happens ",
-      });
-    }
-
-    res.status(ResponseStatus.Success).json({
-      user: user,
-      content: content,
-      message: "Fetched Content Succesfully",
-    });
-  } catch (e) {
-    return res.status(ResponseStatus.Error).json({
-      message: "Internal Server Error. Please try again later",
-      Error: e,
-    });
-  }
-});
 
 app.listen(3000, () => {
   console.log("The Server is Running on 3000 port");
