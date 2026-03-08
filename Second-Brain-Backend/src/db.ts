@@ -21,14 +21,14 @@ const tagSchema = new Schema({
 });
 
 
-const ContetnTypes = ["Tweet","image" ,"video" , "artival", "audio" ,"Links","Document"];
+const ContentTypes = ["twitter", "youtube", "Links", "Document"];
 
 
 
 
 const contentSchema = new Schema({
     link:{type:String ,required :true},
-    type:{type :String,enum:ContetnTypes ,required :true},
+    type:{type :String,enum:ContentTypes ,required :true},
     title:{type:String,required:true},
     tags:[{type:Types.ObjectId, ref :"Tag"}],
     userId:{type:Types.ObjectId, ref :"User"},

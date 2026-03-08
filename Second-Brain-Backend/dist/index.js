@@ -225,8 +225,6 @@ app.delete("/api/v1/content", MiddleWhere, async (req, res) => {
 app.post("/api/v1/brain/share", MiddleWhere, async (req, res) => {
     const Share = req.body.Share;
     const userId = res.locals.userId;
-    console.log(Share);
-    console.log(userId);
     if (Share) {
         const Link = await LinkModel.create({
             hash: random(10),

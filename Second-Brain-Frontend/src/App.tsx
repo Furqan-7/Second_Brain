@@ -52,7 +52,7 @@ function Layout() {
       </div>
 
       <div>
-        <div className="flex justify-between gap-115 ml-10 lg:ml-16 pr-24 lg:pr-36  w-full mt-9  ">
+        <div className="flex justify-between gap-115 ml-8 lg:ml-18 pr-24 lg:pr-36  w-full mt-9  ">
           <div className=" text-[23px] h-min font-semibold">All Notes</div>
           <div className="h-min">
             <ButtonComponent />
@@ -62,10 +62,11 @@ function Layout() {
           </div>
         </div>
 
-        <div className="flex ml-8 lg:ml-16 mt-10  flex-wrap gap-8 lg:gap-13 mb-20 ">
+        <div className="flex ml-8 lg:ml-18 mt-10  flex-wrap gap-8 lg:gap-13 mb-20 ">
           {contents.map((c, index) => (
             <div key={index}>
               <Card
+                type={c.type}
                 id={c._id}
                 title={c.title}
                 content={c.link}
