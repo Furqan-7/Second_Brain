@@ -30,9 +30,9 @@ export function SideBar() {
       <div className="mt-5">
         <SideBarIcons Icon={FaXTwitter} Text={"Tweets"} color={"black"} />
         <SideBarIcons Icon={FaYoutube} Text={"Videos"} color={"red"} />
-        <SideBarIcons Icon={FiFileText} Text={"Documents"} color={"gray"} />
-        <SideBarIcons Icon={IoLinkSharp} Text={"Links"} color={"gray"} />
-        <SideBarIcons Icon={FiHash} Text={"Tags"} color={"gray"} />
+        <SideBarIcons Icon={FiFileText} Text={"Documents"} color={"black"} />
+        <SideBarIcons Icon={IoLinkSharp} Text={"Links"} color={"black"} />
+        <SideBarIcons Icon={FiHash} Text={"Tags"} color={"black"} />
       </div>
 
       {/* Pushes logout to bottom */}

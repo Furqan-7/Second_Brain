@@ -5,6 +5,8 @@ import { useRef, useState, type ReactNode } from "react";
 import axios from "axios";
 import { useFetchContents } from "../hooks/useContnet";
 import { FaXTwitter, FaYoutube } from "react-icons/fa6";
+import { FiFileText } from "react-icons/fi";
+import { IoLinkSharp } from "react-icons/io5";
 
 // interface CardProps {
 //   startIcon: React.ReactNode;
@@ -17,37 +19,41 @@ import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 // }
 
 interface CardProps {
-  id:string
+  id: string;
   title: string;
+  type: string;
   content: string | undefined;
   tags: string[];
 }
 
-export const Card = ({ id,title, content, tags }: CardProps) => {
+export const Card = ({ id, title, content, tags, type }: CardProps) => {
   const date: Date = new Date();
   const token = localStorage.getItem("token");
-    const fetchContents = useFetchContents();
+  const fetchContents = useFetchContents();
 
-  const handleDeleteContent = async ()=>{
-         console.log(id)
-        try{
-           await axios.delete("http://localhost:3000/api/v1/content",{
-               headers: { token },
-               data:{ContentId:id}
-           });
-           await fetchContents();
-        }catch(e){
-            console.log("Failed to Delete Content " + "Error " + e);
-        }
-  }
+  const handleDeleteContent = async () => {
+    console.log(id);
+    try {
+      await axios.delete("http://localhost:3000/api/v1/content", {
+        headers: { token },
+        data: { ContentId: id },
+      });
+      await fetchContents();
+    } catch (e) {
+      console.log("Failed to Delete Content " + "Error " + e);
+    }
+  };
 
   return (
     <div className=" shadow-2xl w-60 h-auto border border-gray-200 rounded-lg ">
       {/* First Section  */}
       <div className="flex justify-between pt-4 pl-4 pr-4">
         <div className="flex items-center gap-2">
-          {/* <FaYoutube color="red" size={23} /> */}
-          <FaXTwitter color="black" size={23} />
+          {type == "twitter" ? <FaXTwitter color="black" size={19} /> : null}
+          {type == "youtube" ? <FaYoutube color="red" size={21} /> : null}
+          {type == "Links" ? <IoLinkSharp color="black" size={22} /> : null}
+          {type == "Document" ? <FiFileText color="black" size={20} /> : null}
+
           {/* <HiOutlineDocumentText color="gray" size={23} /> */}
           <p className="font-[550] text-[15px]">{title} </p>
         </div>
@@ -75,8 +81,11 @@ export const Card = ({ id,title, content, tags }: CardProps) => {
 
       {/* Tags Section */}
       <div className="flex flex-wrap items-center pt-4 pl-4 pr-5 gap-2">
-        {tags.map((tag,index) => (
-          <div key={index} className="pl-2 pr-2 border bg-[#e0e7ff]  tracking-wide  text-[#4f47ba] border-gray-400  bg-gray-100 rounded-[10px] text-[12px]">
+        {tags.map((tag, index) => (
+          <div
+            key={index}
+            className="pl-2 pr-2 border bg-[#e0e7ff]  tracking-wide  text-[#4f47ba] border-gray-400  bg-gray-100 rounded-[10px] text-[12px]"
+          >
             <p> {"#" + tag}</p>
           </div>
         ))}

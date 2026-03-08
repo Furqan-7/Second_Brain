@@ -4,7 +4,6 @@ import { ENV } from "./config/env.js";
 export async function MiddleWhere(req, res, next) {
     // Extract token from request headers
     const token = req.headers.token;
-    console.log("Reached Middle Where ", token);
     // Reject if token is missing or sent as an array
     if (!token || Array.isArray(token)) {
         return res.status(ResponseStatus.NotFound).json({
