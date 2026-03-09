@@ -286,39 +286,37 @@ app.post("/api/v1/brain/share", MiddleWhere, async (req, res) => {
 app.get("/api/v1/brain/:shareLink", async (req, res) => {
   const hash = req.params.shareLink;
 
-  const Link = await LinkModel.findOne({
-    hash,
-  });
+  const link = await LinkModel.findOne({ hash });
 
-  if (!Link) {
+  if (!link) {
     return res.status(ResponseStatus.NotFound).json({
       message: "Invalid Link",
     });
   }
 
   try {
-    const content = await ContentModel.find({ userId: Link.userId });
-    const user = await UserModel.find({ _id: Link.userId });
+    const user = await UserModel.findOne({ _id: link.userId }); // findOne, not find
 
     if (!user) {
-      return res.status(ResponseStatus.Success).json({
-        message: "Something went wrong this usually doest happens ",
+      return res.status(ResponseStatus.NotFound).json({ // 404, not 200
+        message: "User not found",
       });
     }
 
+    const content = await ContentModel.find({ userId: link.userId });
+
     res.status(ResponseStatus.Success).json({
-      user: user,
-      content: content,
-      message: "Fetched Content Succesfully",
+      user,
+      content,
+      message: "Fetched Content Successfully",
     });
   } catch (e) {
     return res.status(ResponseStatus.Error).json({
       message: "Internal Server Error. Please try again later",
-      Error: e,
+      error: e,
     });
   }
 });
-
 
 
 

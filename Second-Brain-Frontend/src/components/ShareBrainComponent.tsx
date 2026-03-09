@@ -4,14 +4,15 @@ import { ShareAtom } from "../atoms/ShareAtom";
 import { useEffect, useState } from "react";
 import { Hash } from "lucide-react";
 import axios from "axios";
+import { ShareHash } from "../atoms/ShareHash";
 
 export function ShareBrain() {
   const [ShareValue, setShareAtom] = useRecoilState(ShareAtom);
   const [link, setLink] = useState(false);
-  const [hash,setHash] = useState("");
+  const [hash, setHash] = useRecoilState(ShareHash);
   const token = localStorage.getItem("token");
 
-  
+  const shareUrl = `http://localhost:5173/api/v1/brain/${hash}`;
 
   const handleShare = async () => {
     const Response = await axios.post(
@@ -51,7 +52,7 @@ export function ShareBrain() {
           </p>
         </div>
 
-        {link ? <ShareLink hash={hash} /> : null}
+        {link ? <ShareLink hash={shareUrl} /> : null}
 
         <div>
           <button
@@ -81,8 +82,8 @@ function ShareLink({ hash }: ShareLinkProps) {
   };
 
   return (
-    <div className="flex justify-between pl-3 pr-2 items-center w-[290px] rounded-[8px] ml-4  mt-4 h-9 border border-gray-400 bg-gray-200">
-      <p>{hash}</p>
+    <div className="flex justify-between pl-3 pr-2 items-center w-[290px] rounded-[8px] ml-4  mt-4 h-10 border border-gray-400 bg-gray-200">
+      <p className="">{hash}</p>
       <button
         onClick={handleCopy}
         className="bg-[#505bd0] hover:cursor-pointer text-white text-[11px] p-1 rounded-[5px]"
