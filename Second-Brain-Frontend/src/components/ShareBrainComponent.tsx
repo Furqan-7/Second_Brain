@@ -82,11 +82,16 @@ function ShareLink({ hash }: ShareLinkProps) {
   };
 
   return (
-    <div className="flex justify-between pl-3 pr-2 items-center w-[290px] rounded-[8px] ml-4  mt-4 h-10 border border-gray-400 bg-gray-200">
-      <p className="">{hash}</p>
+    <div className="flex justify-between items-center gap-1">
+      <div className="    justify-between truncate  p-1.5 items-center w-[210px] rounded-[8px] ml-4  mt-4 h-auto border border-gray-400 bg-gray-200">
+        <article className="text-wrap">
+          <p className="text-wrap">{hash}</p>
+        </article>
+      </div>
+
       <button
         onClick={handleCopy}
-        className="bg-[#505bd0] hover:cursor-pointer text-white text-[11px] p-1 rounded-[5px]"
+        className="bg-[#505bd0] mt-3 w-16 h-9 mr-7 hover:cursor-pointer text-white text-[11px] p- rounded-[5px]"
       >
         Copy Link
       </button>
