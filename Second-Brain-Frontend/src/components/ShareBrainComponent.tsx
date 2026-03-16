@@ -5,14 +5,16 @@ import { useEffect, useState } from "react";
 import { Hash } from "lucide-react";
 import axios from "axios";
 import { ShareHash } from "../atoms/ShareHash";
+import { ShareUrl } from "../atoms/ShareUrl";
 
 export function ShareBrain() {
   const [ShareValue, setShareAtom] = useRecoilState(ShareAtom);
   const [link, setLink] = useState(false);
   const [hash, setHash] = useRecoilState(ShareHash);
   const token = localStorage.getItem("token");
+  const [brainData, setBrainData] = useRecoilState(ShareUrl);
 
-  const shareUrl = `http://localhost:5173/api/v1/brain/${hash}`;
+  const data = `http://localhost:5173/api/v1/brain/${hash}`;
 
   const handleShare = async () => {
     const Response = await axios.post(
@@ -52,7 +54,7 @@ export function ShareBrain() {
           </p>
         </div>
 
-        {link ? <ShareLink hash={shareUrl} /> : null}
+        {link ? <ShareLink hash={data} /> : null}
 
         <div>
           <button
