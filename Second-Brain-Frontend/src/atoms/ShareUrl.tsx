@@ -3,7 +3,7 @@ import { atom } from "recoil";
 interface ContentItem {
   _id: string;
   link: string;
-  type: "Document" | "Tweet" | "Video" | "Links" | "Audio";
+  type: "Document" | "twitter" | "Video" | "Links" | "youtube";
   title: string;
   tags: string[];
   userId: string;

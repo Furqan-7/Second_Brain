@@ -13,11 +13,12 @@ import { Card } from "./components/Card";
 import { SideBar } from "./components/SideBarComponent";
 import { SignupComponent } from "./components/Signup.tsx";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
 import { SigninComponent } from "./components/Signin.tsx";
 import { contentAtom } from "./atoms/Contents.tsx";
 import { useFetchContents } from "./hooks/useContnet.tsx";
 import { useEffect } from "react";
+import { DisplayShare } from "./components/DisplayShare.tsx";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" element={<SignupComponent />} />
           <Route path="/Signin" element={<SigninComponent />} />
           <Route path="/Dashboard" element={<Layout />} />
+          <Route path="/share/:shareId" element={<DisplayShare />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
