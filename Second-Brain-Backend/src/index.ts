@@ -285,6 +285,7 @@ app.post("/api/v1/brain/share", MiddleWhere, async (req, res) => {
 
 app.get("/api/v1/brain/:shareLink", async (req, res) => {
   const hash = req.params.shareLink;
+  console.log("Reached Share ");
 
   const link = await LinkModel.findOne({ hash });
 
@@ -303,7 +304,7 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
       });
     }
 
-    const content = await ContentModel.find({ userId: link.userId });
+    const content = await ContentModel.find({ userId: link.userId }).populate("tags");
 
     res.status(ResponseStatus.Success).json({
       user,

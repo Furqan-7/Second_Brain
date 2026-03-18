@@ -25,7 +25,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const fetchContents = useFetchContents();
 
-  const[exits,setExits] = useState(false);
+  const [exits, setExits] = useState(false);
 
   const handleCreateAccount = async () => {
     try {
@@ -47,9 +47,10 @@ function Signup() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      Navigate("/Dashboard");
+    if (!token) {
+      return;
     }
+    Navigate("/Dashboard");
   }, []);
 
   return (
@@ -80,9 +81,13 @@ function Signup() {
           placeholder="Password"
         ></input>
       </div>
-         {exits ? <div className="flex justify-center items-center mt-2">
-          <p className="text-red-400 text-[14px]">Incorrect Username/Password</p>
-      </div> : null}
+      {exits ? (
+        <div className="flex justify-center items-center mt-2">
+          <p className="text-red-400 text-[14px]">
+            Incorrect Username/Password
+          </p>
+        </div>
+      ) : null}
 
       <div>
         <button

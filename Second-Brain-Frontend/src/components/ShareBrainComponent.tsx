@@ -12,10 +12,8 @@ export function ShareBrain() {
   const [link, setLink] = useState(false);
   const [hash, setHash] = useRecoilState(ShareHash);
   const token = localStorage.getItem("token");
-  const [brainData, setBrainData] = useRecoilState(ShareUrl);
 
-  const data = `http://localhost:5173/api/v1/brain/${hash}`;
-
+  const data = `http://localhost:5173/share/${hash}`;
   const handleShare = async () => {
     const Response = await axios.post(
       "http://localhost:3000/api/v1/brain/share",
