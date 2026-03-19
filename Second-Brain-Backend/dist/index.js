@@ -274,6 +274,37 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
         });
     }
 });
+// api for fetching all the content that has type twitter 
+app.get("/api/v1/content/twitter", MiddleWhere, async (req, res) => {
+    const userId = res.locals.userId;
+    console.log("Reached Twitter");
+    if (!mongoose.isValidObjectId(userId)) {
+        return res.status(ResponseStatus.NotFound).json({
+            message: "Invalid userId",
+        });
+    }
+    try {
+        const content = await ContentModel.find({ userId, type: 'twitter' })
+            .populate("tags");
+        if (!content) {
+            return res.status(ResponseStatus.NotFound).json({
+                message: "Not Found",
+            });
+        }
+        else {
+            return res.status(ResponseStatus.Success).json({
+                message: "Feached Content Sucessfully",
+                content: content,
+            });
+        }
+    }
+    catch (e) {
+        return res.status(ResponseStatus.Error).json({
+            message: "Internal Server Error. Please try again later",
+            Error: e,
+        });
+    }
+});
 app.listen(3000, () => {
     console.log("The Server is Running on 3000 port");
 });
